@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>backbone sample03</title>
+  <link rel="stylesheet" href="dist/app.css">
+  <script src="https://use.fontawesome.com/e3ae05b8e6.js"></script>
+</head>
+<body>
+
+<div class="main" id="app">
+  <form class="form js-form">
+  </form>
+
+  <div class="searchBox">
+    <i class="fa fa-search searchBox__icon" aria-hidden="true"></i>
+    <input type="text" class="searchBox__input js-search"
+           value="" placeholder="ここに絞り込みたいキーワードを入力する">
+  </div>
+
+  <ul class="list js-todo_list"></ul>
+
+  <script type="text/template" id="template-list-item">
+    <li class="list__item js-todo_list-item <% if (isDone){ %>list__item--done<% } %>">
+      <i class="fa <% if (isDone){ %>fa-check-square<% }else{ %>fa-square-o<% } %>
+       icon-check js-toggle-done" aria-hidden="true"></i>
+      <% if (!editMode){ %>
+      <span class="js-todo_list-text"><%= text %></span>
+      <% }else{ %>
+      <input type="text" class="editText js-todo_list-editForm" value="<%= text %>">
+      <% } %>
+      <i class="fa fa-trash icon-trash js-click-trash" aria-hidden="true"></i>
+    </li>
+  </script>
+
+  <script type="text/template" id="template-form">
+    <div class="inputArea">
+      <input type="text" class="inputText js-get-val" value="" placeholder="ここにTODO内容を書く">
+      <% if(hasError){ %>
+      <span class="error"><%= errorMsg %></span>
+      <% } %>
+    </div>
+    <button class="btn js-add-todo">TODOを追加</button>
+  </script>
+
+</div>
+
+<script src="dist/bundle.js"></script>
+</body>
+</html>
