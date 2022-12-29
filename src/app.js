@@ -85,7 +85,7 @@ var ListView = Backbone.View.extend({
   },
   addItem: function (text) {
     var model = new Item({text: text});
-    this.collection.add(model); // add イベントが発生し、this.appendItem が呼ばれる
+    this.collection.add(model); // add イベントが発生し、this.appendItem が呼ばれる  
   },
   appendItem: function (model) {
     var itemView = new ItemView({model: model});
@@ -116,8 +116,17 @@ var FormView = Backbone.View.extend({
   },
   addTodo: function(e){
     e.preventDefault(); //memo:送信ボタン押されたときに画面更新したくないため
-    this.model.set({val: $('.js-get-val').val()});
-    listView.addItem(this.model.get('val'));
+
+    if (!$('.js-get-val').val()) {
+      console.log('task false');
+      $('.error').show();
+      this.model.set({hasError: true});
+      this.model.set({errorMsg: 'タスク名が空欄です'});
+    } else {
+      this.model.set({val: $('.js-get-val').val()});
+      listView.addItem(this.model.get('val'));
+      console.log('task add');
+    }
   },
   render: function () {
     var template = this.template(this.model.attributes);
