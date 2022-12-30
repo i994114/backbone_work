@@ -15163,7 +15163,8 @@ var Item = Backbone.Model.extend({
   defaults: {
     text: '',
     isDone: false,
-    editMode: false
+    editMode: false,
+    showJdg: true
   }
 });
 var Form = Backbone.Model.extend({
@@ -15174,6 +15175,13 @@ var Form = Backbone.Model.extend({
   }
 });
 var form = new Form();
+
+var Search = Backbone.Model.extend({
+  defaults: {
+    val: ''
+  }
+});
+var search = new Search();
 
 //=============================================
 // Collection
@@ -15289,6 +15297,65 @@ var FormView = Backbone.View.extend({
   }
 });
 new FormView();
+
+//検索用
+var searchListView = Backbone.View.extend({
+  el: $('.js-searchBox'),
+  model: search,
+  collection: list,
+    
+  initialize: function() {
+    _.bindAll(this, 'render', 'searchText', 'searchList');
+    this.render();
+  },
+  
+  events: {
+    'keyup .js-search': 'searchText'
+  },
+
+  searchText: function() {
+    //検索枠に入れた文字列をset
+    this.model.set({val: $('.js-search').val()});
+    //検索結果表示用のメソッドを読み出し
+    this.searchList();
+  },
+
+  searchList: function() {
+    var searchTxt = this.model.get('val');
+    var regexp = new RegExp('^' + searchTxt);
+
+    console.log('検索KWは：' + searchTxt);
+    this.collection.each(function(elm, i) {
+      var val = elm.get('text');
+      console.log('検索対象のタスク名は：' + val);
+      
+      if (val && val.match(regexp)) {
+        elm.set({showJdg: true});
+      } else {
+        elm.set({showJdg: false});
+      }
+      
+      if (elm.get('showJdg')) {
+        console.log('show: iは' + i + 'で' + 'タスク名は' + val);  
+        $('.js-todo_list-item').show();
+      } else {
+        console.log('hide: iは' + i + 'で' + 'タスク名は' + val);
+        //下記を入れると、ループの最後の結果ですべての結果を上書きしてしまう。。
+        //$('.js-todo_list-item').hide();
+      }
+      
+    });
+    console.log('end');
+  },
+
+  render: function() {
+    console.log('render item(search)');
+    return this;
+  }
+
+});
+new searchListView();
+
 
 // 宿題１：inputが空で入力された場合にエラーメッセージを表示してみよう
 // 宿題２：検索を作ってみよう
